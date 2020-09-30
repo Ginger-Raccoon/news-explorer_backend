@@ -6,13 +6,18 @@ const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
 
 module.exports.getUser = (req, res, next) => {
+  const owner = req.user._id;
   User
-    .findById(req.params.id)
+    .findById(owner)
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким id');
+      } else {
+        res.send({
+          name: user.name,
+          email: user.email,
+        });
       }
-      res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
