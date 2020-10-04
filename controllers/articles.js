@@ -26,18 +26,16 @@ module.exports.createArticle = (req, res, next) => {
 
 module.exports.deleteArticle = (req, res, next) => {
   const { articleId } = req.params;
-  const { owner } = req.params;
   const user = req.user._id;
-  Article.findByIdAndRemove(articleId)
+  Article.findById(articleId)
+    .orFail(new NotFoundError('Карточка не найдена'))
     .then((article) => {
-      if (owner === user) {
-        if (!article) {
-          throw new NotFoundError('Карточка не найдена');
-        } else {
-          res.send({ data: article });
-        }
-      } else {
+      const { owner } = article;
+      if (owner.toString() === user) {
         throw new BadRequestError('Это не ваша карточка');
+      } else {
+        res.send({ data: article });
+        article.remove();
       }
     })
     .catch((err) => {
