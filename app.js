@@ -30,7 +30,6 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(requestLogger);
 
 app.get('/crash-test', () => {
   setTimeout(() => {
@@ -56,3 +55,4 @@ app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`App listening on port ${PORT}`);
 });
+app.use(requestLogger);
