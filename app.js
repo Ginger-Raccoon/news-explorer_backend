@@ -11,7 +11,9 @@ const limiter = require('./middlewares/rateLimit');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const router = require('./routes/index');
 
-mongoose.connect('mongodb://localhost:27017/diploma', {
+const { NODE_ENV, BASE_URL } = process.env;
+
+mongoose.connect(NODE_ENV === 'production' ? BASE_URL : 'mongodb://localhost:27017/diploma', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
