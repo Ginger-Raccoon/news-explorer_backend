@@ -2,6 +2,20 @@ const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const { login, createUser } = require('../controllers/users');
 const auth = require('../middlewares/auth');
+const NotFoundError = require('../errors/not-found-err');
+const errorHandler = require('../middlewares/errorHandler');
+
+router.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
+router.use('*', () => {
+  throw new NotFoundError('Запрашиваемый ресурс не найден');
+});
+
+router.use('/', errorHandler);
 
 router.post('/signin', celebrate({
   body: Joi.object().keys({
