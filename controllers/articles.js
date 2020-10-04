@@ -1,6 +1,6 @@
 const Article = require('../models/article');
 const NotFoundError = require('../errors/not-found-err');
-const BadRequestError = require('../errors/bad-request-err');
+const ForbiddenError = require('../errors/forbidden-err');
 
 module.exports.getArticles = (req, res, next) => {
   const user = req.user._id;
@@ -32,7 +32,7 @@ module.exports.deleteArticle = (req, res, next) => {
     .then((article) => {
       const { owner } = article;
       if (owner.toString() === user) {
-        throw new BadRequestError('Это не ваша карточка');
+        throw new ForbiddenError('Это не ваша карточка');
       } else {
         res.send({ data: article });
         article.remove();
@@ -42,18 +42,3 @@ module.exports.deleteArticle = (req, res, next) => {
       next(err);
     });
 };
-
-// module.exports.deleteArticle = (req, res, next) => {
-//   const { articleId } = req.params;
-//   Article.findByIdAndRemove(articleId)
-//     .then((article) => {
-//       if (!article) {
-//         throw new NotFoundError('Карточка не найдена');
-//       } else {
-//         res.send({ data: article });
-//       }
-//     })
-//     .catch((err) => {
-//       next(err);
-//     });
-// };
