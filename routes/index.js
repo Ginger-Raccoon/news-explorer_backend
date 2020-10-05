@@ -1,6 +1,8 @@
 const router = require('express').Router();
-const { celebrate, Joi } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
+const bodyParser = require('body-parser');
 const { login, createUser } = require('../controllers/users');
+const { requestLogger, errorLogger } = require('../middlewares/logger');
 const auth = require('../middlewares/auth');
 const NotFoundError = require('../errors/not-found-err');
 const errorHandler = require('../middlewares/errorHandler');
@@ -11,12 +13,9 @@ router.get('/crash-test', () => {
   }, 0);
 });
 
-router.use('*', () => {
-  throw new NotFoundError('Запрашиваемый ресурс не найден');
-});
-
-router.use('/', errorHandler);
-
+router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({ extended: false }));
+router.use(requestLogger);
 router.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().email().required().pattern(/[a-z0-9]+([\w]+\.)*([\w]+-)*([\w])*([a-z0-9]@)[\w-]+(\.[\w-]+)*\.[a-z]+|([a-z0-9]@)[\w-]+(\.[\w-]+)*\.[a-z]+/),
@@ -32,8 +31,15 @@ router.post('/signup', celebrate({
   }),
 }), createUser);
 
-router.use(auth);
-router.use('/articles', require('./articles'));
-router.use('/users', require('./users'));
+router.use('/articles', auth, require('./articles'));
+router.use('/users', auth, require('./users'));
+
+router.use('/', errorHandler);
+router.use('*', () => {
+  throw new NotFoundError('Запрашиваемый ресурс не найден');
+});
+
+router.use(errorLogger);
+router.use(errors());
 
 module.exports = router;
