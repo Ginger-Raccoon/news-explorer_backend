@@ -32,10 +32,10 @@ module.exports.deleteArticle = (req, res, next) => {
     .then((article) => {
       const { owner } = article;
       if (owner.toString() === user) {
-        throw new ForbiddenError('Это не ваша карточка');
-      } else {
         res.send({ data: article });
         article.remove();
+      } else {
+        throw new ForbiddenError('Это не ваша карточка');
       }
     })
     .catch((err) => {

@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const { celebrate, Joi, errors } = require('celebrate');
-const bodyParser = require('body-parser');
 const { login, createUser } = require('../controllers/users');
 const { requestLogger, errorLogger } = require('../middlewares/logger');
 const auth = require('../middlewares/auth');
@@ -13,8 +12,7 @@ router.get('/crash-test', () => {
   }, 0);
 });
 
-router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({ extended: false }));
+router.use('/', errorHandler);
 router.use(requestLogger);
 router.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -34,7 +32,6 @@ router.post('/signup', celebrate({
 router.use('/articles', auth, require('./articles'));
 router.use('/users', auth, require('./users'));
 
-router.use('/', errorHandler);
 router.use('*', () => {
   throw new NotFoundError('Запрашиваемый ресурс не найден');
 });
