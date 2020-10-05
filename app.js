@@ -24,15 +24,7 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(limiter);
 
-
-
-
 app.use(router);
-
-
-
-
-
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
