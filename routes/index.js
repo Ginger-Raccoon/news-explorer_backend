@@ -12,7 +12,6 @@ router.get('/crash-test', () => {
   }, 0);
 });
 
-router.use('/', errorHandler);
 router.use(requestLogger);
 router.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -32,6 +31,7 @@ router.post('/signup', celebrate({
 router.use('/articles', auth, require('./articles'));
 router.use('/users', auth, require('./users'));
 
+router.use('/', errorHandler);
 router.use('*', () => {
   throw new NotFoundError('Запрашиваемый ресурс не найден');
 });
