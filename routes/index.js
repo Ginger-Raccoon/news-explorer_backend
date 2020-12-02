@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Joi, errors } = require('celebrate');
-const { login, createUser } = require('../controllers/users');
+const { login, createUser, unlogin } = require('../controllers/users');
 const { requestLogger, errorLogger } = require('../middlewares/logger');
 const auth = require('../middlewares/auth');
 const NotFoundError = require('../errors/not-found-err');
@@ -30,6 +30,8 @@ router.post('/signup', celebrate({
 
 router.use('/articles', auth, require('./articles'));
 router.use('/users', auth, require('./users'));
+
+router.post('/exit', auth, unlogin);
 
 router.use('/', errorHandler);
 router.use('*', () => {
