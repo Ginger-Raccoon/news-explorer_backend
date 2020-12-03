@@ -13,6 +13,8 @@ const router = require('./routes/index');
 const corsOptions = {
   origin: [
     'http://localhost:8080',
+    'api.raccoondiploma.ml',
+    'www.api.raccoondiploma.ml',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,
