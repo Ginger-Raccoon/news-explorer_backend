@@ -15,6 +15,7 @@ const corsOptions = {
     'http://localhost:8080',
     'https://api.raccoondiploma.ml',
     'https://www.api.raccoondiploma.ml',
+    'https://ginger-raccoon.github.io',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,
